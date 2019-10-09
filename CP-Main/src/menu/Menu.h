@@ -6,7 +6,7 @@
 static const char* NOT_SELECTED_OPTIONS[MENU_SIZE] = { "   Open text file", "   Display the sheet", "   Find a record", "   Save as text", "   Exit" };
 static const char* SELECTED_OPTIONS[MENU_SIZE] = { "=> Open text file", "=> Display the sheet", "=> Find a record", "=> Save as text", "=> Exit" };
 
-enum Option
+static enum Option
 {
 	FIRST, SECOND, THIRD, FOURTH, FIFTH
 };
