@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
 void AddFlight(const struct Flight* flight)
 {
 	if (!last)
@@ -33,14 +32,12 @@ void EraseFlight(const int flightNumber)
 				free(i);
 				return;
 			}
-			
 			if (i->next == 0)
 			{
 				last = i->previous;
 				free(i);
 				return;
 			}
-
 			i->previous->next = i->next;
 			free(i);
 		}
@@ -51,12 +48,13 @@ void ModifyFlight(const int flightNumber)
 {
 	for (const struct Node* i = first; i != 0; i = i->next)
 	{
-		if (i->flight.flightNumber == flightNumber);         // ??????????????????????????
+		if (i->flight.flightNumber == flightNumber);					// ??????????????????????????
 	}
 }
 
 void DisplayAll()
 {
+	puts(TABLE_HEADER);
 	for (const struct Node* i = first; i != 0; i = i->next)
 	{
 		printf("%d	%s	%s	%f	%d\n", i->flight.flightNumber, i->flight.flightTitle, 

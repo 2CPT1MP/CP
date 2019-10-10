@@ -1,10 +1,14 @@
 ﻿#pragma once
-
-#define HEADER "=========================================\n             FLIGHTS DATABASE\n=========================================\n"
+#define MAIN_HEADER "                                                        \n"\
+				    "                    FLIGHTS DATABASE                    \n"\
+                    "                                                        \n"
 
 #define MENU_SIZE 5
-static const char* NOT_SELECTED_OPTIONS[MENU_SIZE] = { "   Open text file", "   Display the sheet", "   Find a record", "   Save as text", "   Exit" };
-static const char* SELECTED_OPTIONS[MENU_SIZE] = { "=> Open text file", "=> Display the sheet", "=> Find a record", "=> Save as text", "=> Exit" };
+static const char* OPTIONS[MENU_SIZE] = { " Open file     ",
+                                          " Display sheet ", 
+	                                      " Find records  ", 
+	                                      " Save text     ", 
+	                                      " Exit program  "};
 
 static enum Option
 {

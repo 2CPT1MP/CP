@@ -1,24 +1,67 @@
 ﻿#include "Menu.h"
+#include "Struct.h"
+#include <Windows.h>
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
 
+static Run(enum Option option)
+{
+	switch (option)
+	{
+	case FIRST:
+		break;
+	case SECOND:
+		DisplayAll();
+		system("pause");
+		break;
+	case THIRD:
+		break;
+	case FOURTH:
+		break;
+	case FIFTH:
+		break;
+	}
+}
+
+static void SetConsoleColor(int textColor, int bgColor) {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (textColor + (bgColor * 16)));
+}
+
+static void HideCursor()
+{
+	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO info;
+	info.dwSize = 100;
+	info.bVisible = FALSE;
+	SetConsoleCursorInfo(consoleHandle, &info);
+}
+
 void ShowMenu()
 {
 	enum Option chosenOption = FIRST;
-
 	do
 	{
-		system("cls");
-		puts(HEADER);
+		HideCursor();
+		system("cls");                  //BLINKING ??????????????????
+		SetConsoleColor(0, 15);
+		puts("");
+		puts(MAIN_HEADER);
+		SetConsoleColor(7, 0);
+		
 		for (short i = 0; i < MENU_SIZE; i++)
 		{
-			if (i == chosenOption)
-				puts(SELECTED_OPTIONS[i]);
+			putchar(' ');
+			if (i == chosenOption) {
+				
+				SetConsoleColor(0, 15);
+				puts(OPTIONS[i]);
+				SetConsoleColor(15, 0);
+			}
 			else
-				puts(NOT_SELECTED_OPTIONS[i]);
+				puts(OPTIONS[i]);
 		}
-
+	
 		switch (getch())
 		{
 		case 72:
@@ -29,7 +72,11 @@ void ShowMenu()
 			if (chosenOption + 1 < MENU_SIZE)
 				chosenOption++;
 			break;
+		case 13:
+			Run(chosenOption);
+			break;
+		case 27:
+			break;
 		}
 	} while (1);
-
 }
