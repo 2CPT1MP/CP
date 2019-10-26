@@ -1,9 +1,9 @@
 #pragma once
-#define TABLE_HEADER "  FLIGHT NUMBER | FLIGHT TITLE |  PLANE MODEL  |    EXPENSES    |   PASSENGER COUNT   "
+#define TABLE_HEADER "   FLIGHT NUMBER  | FLIGHT TITLE |  PLANE MODEL  |    EXPENSES    |   PASSENGERS   "
 					
-
 #define TITLE_CAPACITY 35
 #define PLANE_MODEL_LEN 6
+
 struct Flight
 {
 	int flightNumber, passengerCount;

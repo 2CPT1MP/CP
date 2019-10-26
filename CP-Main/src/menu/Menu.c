@@ -19,7 +19,6 @@ static Run(enum Option option)
 		puts(MAIN_HEADER);
 		SetConsoleColor(7, 0);
 		DisplayAll();
-		system("pause");
 		break;
 	case THIRD:
 		break;
@@ -53,7 +52,7 @@ void ShowMenu()
 		SetConsoleColor(0, 15);
 		puts("");
 		puts(MAIN_HEADER);
-		SetConsoleColor(7, 0);
+		SetConsoleColor(15, 0);
 		
 		for (short i = 0; i < MENU_SIZE; i++)
 		{
