@@ -1,11 +1,10 @@
 #pragma once
-#define TABLE_HEADER "---------------------------------------------------------------------------\n"\
-					  "FLIGHT NUMBER    FLIGHT TITLE    PLANE MODEL    EXPENSES    PASSENGER COUNT\n"\
-					 "---------------------------------------------------------------------------"
+#define TABLE_HEADER "  FLIGHT NUMBER | FLIGHT TITLE |  PLANE MODEL  |    EXPENSES    |   PASSENGER COUNT   "
+					
 
 #define TITLE_CAPACITY 35
 #define PLANE_MODEL_LEN 6
-static struct Flight
+struct Flight
 {
 	int flightNumber, passengerCount;
 	char flightTitle[TITLE_CAPACITY], planeModel[PLANE_MODEL_LEN];

@@ -12,6 +12,12 @@ static Run(enum Option option)
 	case FIRST:
 		break;
 	case SECOND:
+		HideCursor();
+		system("cls");                  
+		SetConsoleColor(0, 15);
+		puts("");
+		puts(MAIN_HEADER);
+		SetConsoleColor(7, 0);
 		DisplayAll();
 		system("pause");
 		break;
@@ -24,11 +30,11 @@ static Run(enum Option option)
 	}
 }
 
-static void SetConsoleColor(int textColor, int bgColor) {
+void SetConsoleColor(int textColor, int bgColor) {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (textColor + (bgColor * 16)));
 }
 
-static void HideCursor()
+void HideCursor()
 {
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO info;
@@ -43,7 +49,7 @@ void ShowMenu()
 	do
 	{
 		HideCursor();
-		system("cls");                  //BLINKING ??????????????????
+		system("cls");                 
 		SetConsoleColor(0, 15);
 		puts("");
 		puts(MAIN_HEADER);
