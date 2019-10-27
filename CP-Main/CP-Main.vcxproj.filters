@@ -24,12 +24,18 @@
     <ClCompile Include="src\struct\Struct.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\io\binary\Binary.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\menu\Menu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\struct\Struct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\binary\Binary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

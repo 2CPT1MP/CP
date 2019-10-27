@@ -5,9 +5,10 @@
 
 #include "Menu.h"
 #include "Struct.h"
+#include "binary\Binary.h"
 
 
-static Run(enum Option chosenOption)
+static void Run(enum Option chosenOption)
 {
 	struct Flight flight;
 	int isDuplicate = 0;
@@ -39,7 +40,23 @@ static Run(enum Option chosenOption)
 				}
 			}
 			if (!isDuplicate)
+			{
 				AddFlight(&flight);
+				SaveData(first);
+				SetConsoleColor(10, 0);
+				puts("\n [SUCCESS] Successfully added\n");
+				putchar(' ');
+				SetConsoleColor(15, 0);
+				system("pause");
+			}
+			else {
+				SetConsoleColor(4, 0);
+				puts("\n [FAILURE] Not added. Duplicate ID found");
+				putchar(' ');
+				SetConsoleColor(15, 0);
+				system("pause");
+				return;
+			}
 		}
 		break;
 	case SEEK_OPTION:
@@ -49,8 +66,8 @@ static Run(enum Option chosenOption)
 
 		break;
 	case EXIT_OPTION:
-
-		break;
+		if (SaveData(first) != -1)
+			exit(0);
 	}
 }
 

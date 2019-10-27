@@ -5,6 +5,7 @@
 
 #include "Struct.h"
 #include "Menu.h"
+#include "binary/Binary.h"
 
 struct Node extern *first = 0, *last = 0;
 
@@ -96,14 +97,14 @@ struct Flight MakeFlight()
 			switch (chosenOpt)
 			{
 			case FLIGHT_NUM_OPTION:
-				printf("\n> ");
+				printf("\n Data> ");
 				HideCursor(0);
 				scanf_s("%d", &flight.flightNumber);
 				HideCursor(1);
 				while (getchar() != '\n');
 				continue;
 			case FLIGHT_TITLE_OPTION:
-				printf("\n> ");
+				printf("\n Data> ");
 				HideCursor(0);
 				fgets(flight.flightTitle, TITLE_CAPACITY, stdin);
 				flight.flightTitle[strlen(flight.flightTitle) - 1] = 0;
@@ -111,7 +112,7 @@ struct Flight MakeFlight()
 				HideCursor(1);
 				continue;
 			case PLANE_MODEL_OPTION:
-				printf("\n> ");
+				printf("\n Data> ");
 				HideCursor(0);
 				fgets(flight.planeModel, PLANE_MODEL_CAPACITY, stdin);
 				flight.planeModel[strlen(flight.planeModel) - 1] = 0;
@@ -119,14 +120,14 @@ struct Flight MakeFlight()
 				HideCursor(1);
 				continue;
 			case EXPENSES_OPTION:
-				printf("\n> ");
+				printf("\n Data> ");
 				HideCursor(0);
 				scanf_s("%f", &flight.expenses);
 				HideCursor(1);
 				while (getchar() != '\n');
 				continue;
 			case PASSENGER_COUNT_OPTION:
-				printf("\n> ");
+				printf("\n Data> ");
 				HideCursor(0);
 				scanf_s("%d", &flight.passengerCount);
 				HideCursor(1);
@@ -276,6 +277,7 @@ static void AlterFlight(struct Node* node)
 				break;
 			}
 		}
+		int testValue = 0;
 		switch (_getch())
 		{
 		case 72:
@@ -290,14 +292,14 @@ static void AlterFlight(struct Node* node)
 			switch (chosenOpt)
 			{
 			case FLIGHT_NUM_OPTION:
-				printf("\n> ");
+				printf("\n Data> ");
 				HideCursor(0);
 				scanf_s("%d", &flight.flightNumber);
 				HideCursor(1);
 				while (getchar() != '\n');
 				continue;
 			case FLIGHT_TITLE_OPTION:
-				printf("\n> ");
+				printf("\n Data> ");
 				HideCursor(0);
 				fgets(flight.flightTitle, TITLE_CAPACITY, stdin);
 				flight.flightTitle[strlen(flight.flightTitle) - 1] = 0;
@@ -305,7 +307,7 @@ static void AlterFlight(struct Node* node)
 				HideCursor(1);
 				continue;
 			case PLANE_MODEL_OPTION:
-				printf("\n> ");
+				printf("\n Data> ");
 				HideCursor(0);
 				fgets(flight.planeModel, PLANE_MODEL_CAPACITY, stdin);
 				flight.planeModel[strlen(flight.planeModel) - 1] = 0;
@@ -313,27 +315,84 @@ static void AlterFlight(struct Node* node)
 				HideCursor(1);
 				continue;
 			case EXPENSES_OPTION:
-				printf("\n> ");
+				printf("\n Data> ");
 				HideCursor(0);
 				scanf_s("%f", &flight.expenses);
 				HideCursor(1);
 				while (getchar() != '\n');
 				continue;
 			case PASSENGER_COUNT_OPTION:
-				printf("\n> ");
+				printf("\n Data> ");
 				HideCursor(0);
 				scanf_s("%d", &flight.passengerCount);
 				HideCursor(1);
 				while (getchar() != '\n');
 				continue;
 			case SAVE_OPTION:
-				node->flight = flight;
-				return;
-				break;
+				if (node->flight.expenses != flight.expenses
+					|| node->flight.flightNumber != flight.flightNumber
+					|| strcmp(node->flight.flightTitle, flight.flightTitle)
+					|| strcmp(node->flight.planeModel, flight.planeModel)
+					|| node->flight.passengerCount != flight.passengerCount)
+				{
+						SetConsoleColor(6, 0);
+						printf("\n [CONFIRMATION] Enter Flight Number> ");
+						SetConsoleColor(15, 0);
+						HideCursor(0);
+						scanf_s("%d", &testValue);
+						while (getchar() != '\n');
+						HideCursor(1);
+
+						if (testValue == node->flight.flightNumber)
+						{
+							node->flight = flight;
+							SaveData(first);
+							SetConsoleColor(10, 0);
+							puts(" [SUCCESS] Edit confirmed\n");
+							putchar(' ');
+							SetConsoleColor(15, 0);
+							system("pause");
+							return;
+						}
+						SetConsoleColor(4, 0);
+						puts(" [FAILURE] Invalid Confirmation Key\n");
+						putchar(' ');
+						SetConsoleColor(15, 0);
+						system("pause");
+						continue;
+				}
+				
+				SetConsoleColor(3, 0);
+				puts("\n [INFO] No changes were made\n");
+				putchar(' ');
+				SetConsoleColor(15, 0);
+				system("pause");
+				continue;
 			case DELETE_OPTION:
-				EraseFlight(node->flight.flightNumber);
-				return;
-				break;
+				SetConsoleColor(6, 0);
+				printf("\n [CONFIRMATION] Enter Flight Number> ");
+				SetConsoleColor(15, 0);
+				HideCursor(0);
+				scanf_s("%d", &testValue);
+				while (getchar() != '\n');
+				HideCursor(1);
+				if (testValue == node->flight.flightNumber)
+				{
+					EraseFlight(node->flight.flightNumber);
+					SaveData(first);
+					SetConsoleColor(10, 0);
+					puts(" [SUCCESS] Deletion was successful\n");
+					putchar(' ');
+					SetConsoleColor(15, 0);
+					system("pause");
+					return;
+				} 
+				SetConsoleColor(4, 0);
+				puts(" [FAILURE] Invalid Confirmation Key\n");
+				putchar(' ');
+				SetConsoleColor(15, 0);
+				system("pause");
+				continue;
 			case CANCEL_OPTION:
 				return;
 			}
