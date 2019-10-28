@@ -17,10 +17,10 @@ void DisplayMainHeader()
 	SetConsoleColor(15, 0);
 	NewLine();
 	SetConsoleColor(0, 15);
-	printf("%s", MAIN_HEADER_LINE);
+	wprintf(L"%s", MAIN_HEADER_LINE);
 	NewLine();
-	printf("%s", MAIN_HEADER);
-	printf("%s", MAIN_HEADER_LINE);
+	wprintf(L"%s", MAIN_HEADER);
+	wprintf(L"%s", MAIN_HEADER_LINE);
 	NewLine();
 	SetConsoleColor(15, 0);
 	NewLine();
@@ -56,26 +56,26 @@ void DrawEditMenuFrame(enum EditMenuOption chosenOption, const struct Flight* fl
 				else
 					SetConsoleColor(0, 14);
 		}
-		printf("%s", EDIT_MENU_OPTIONS[i]);
+		wprintf(L"%s", EDIT_MENU_OPTIONS[i]);
 
 		SetConsoleColor(15, 0);
 
 		switch (i)
 		{
 		case FLIGHT_NUM_OPTION:
-			printf("%15d\t", flight->flightNumber);
+			wprintf(L"%15d\t", flight->flightNumber);
 			break;
 		case FLIGHT_TITLE_OPTION:
-			printf("%15s\t", flight->flightTitle);
+			wprintf(L"%15s\t", flight->flightTitle);
 			break;
 		case PLANE_MODEL_OPTION:
-			printf("%15s\t", flight->planeModel);
+			wprintf(L"%15s\t", flight->planeModel);
 			break;
 		case EXPENSES_OPTION:
-			printf("%15.2f$\t", flight->expenses);
+			wprintf(L"%15.2f РУБ\t", flight->expenses);
 			break;
 		case PASSENGER_COUNT_OPTION:
-			printf("%15d\t", flight->passengerCount);
+			wprintf(L"%15d\t", flight->passengerCount);
 			break;
 		}
 		SetConsoleColor(15, 0);
@@ -89,7 +89,7 @@ void DrawRecordsFrame(struct Node* chosenNode)
 {
 	DisplayMainHeader();
 	SetConsoleColor(0, 9);
-	printf("%s", TABLE_HEADER);
+	wprintf(L"%s", TABLE_HEADER);
 	NewLine();
 	SetConsoleColor(15, 0);
 
@@ -97,14 +97,14 @@ void DrawRecordsFrame(struct Node* chosenNode)
 	{
 		if (i == chosenNode)
 			SetConsoleColor(0, 14);
-		printf("  %15d%15s %15s %15.2f$  %15d ", i->flight.flightNumber, i->flight.flightTitle,
+		wprintf(L"  %15d%15s %15s %15.2f РУБ  %15d ", i->flight.flightNumber, i->flight.flightTitle,
 			i->flight.planeModel, i->flight.expenses, i->flight.passengerCount);
 		NewLine();
 		SetConsoleColor(15, 0);
 	}
 	NewLine();
 	SetConsoleColor(0, 15);
-	printf("                    ENTER - Edit record          ESC - Go back                          ");
+	wprintf(L"                    ENTER - Отредактировать запись        ESC - Вернутся назад                     ");
 	NewLine();
 	SetConsoleColor(15, 0);
 	WipeRows();
@@ -119,13 +119,13 @@ void DrawMainMenuFrame(enum MainMenuOption chosenOption)
 	{
 		if (i == chosenOption) {
 			SetConsoleColor(0, 14);
-			printf("%s", MAIN_MENU_OPTIONS[i]);
+			wprintf(L"%s", MAIN_MENU_OPTIONS[i]);
 			SetConsoleColor(15, 0);
 			NewLine();
 		}
 		else
 		{
-			printf("%s", MAIN_MENU_OPTIONS[i]);
+			wprintf(L"%s", MAIN_MENU_OPTIONS[i]);
 			NewLine();
 		}
 	}
@@ -170,19 +170,19 @@ static void Run(const enum Option chosenOption)
 					SaveData(first);
 					SetConsoleColor(10, 0);
 					NewLine();
-					printf(" [SUCCESS] Successfully added");
+					wprintf(L" [УСПЕХ] Запись была успешно добавлена ");
 				}
 				else {
 					SetConsoleColor(4, 0);
 					NewLine();
-					printf(" [FAILURE] Not added. Duplicate ID found");
+					wprintf(L" [ОШИБКА] Запись не добавлена. Введённый номер рейса уже существует ");
 				}
 			}
 			else
 			{
 				SetConsoleColor(4, 0);
 				NewLine();
-				printf(" [FAILURE] Not added. Invalid flight info");
+				wprintf(L" [ОШИБКА] Запись не добавлена. Предоставлена неверная информация о рейсе ");
 			}
 			SetConsoleColor(15, 0);
 			NewLine();

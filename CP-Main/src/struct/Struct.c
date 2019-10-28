@@ -1,4 +1,4 @@
-#include <stdlib.h>
+﻿#include <stdlib.h>
 #include <stdio.h>
 #include <conio.h>
 #include <Windows.h>
@@ -6,6 +6,8 @@
 #include "Struct.h"
 #include "Menu.h"
 #include "Binary.h"
+
+
 
 struct Node extern *first = 0, *last = 0;
 
@@ -36,32 +38,32 @@ int SelectField(enum EditMenuOption chosenOption, struct Flight* flight)
 	{
 		SetConsoleColor(3, 0);
 		NewLine();
-		printf(" Data> ");
+		wprintf(L" Введите данные> ");
 		HideCursor(FALSE);
 	}
 	
 	switch (chosenOption)
 	{
 	case FLIGHT_NUM_OPTION:
-		scanf_s("%d", &flight->flightNumber);
+		wscanf_s(L"%d", &flight->flightNumber);
 		while (getchar() != '\n');
 		break;
 	case FLIGHT_TITLE_OPTION:
-		fgets(flight->flightTitle, TITLE_CAPACITY, stdin);
-		flight->flightTitle[strlen(flight->flightTitle) - 1] = 0;
+		fgetws(flight->flightTitle, TITLE_CAPACITY, stdin);
+		flight->flightTitle[wcslen(flight->flightTitle) - 1] = 0;
 		fseek(stdin, 0, SEEK_END);
 		break;
 	case PLANE_MODEL_OPTION:
-		fgets(flight->planeModel, PLANE_MODEL_CAPACITY, stdin);
-		flight->planeModel[strlen(flight->planeModel) - 1] = 0;
+		fgetws(flight->planeModel, PLANE_MODEL_CAPACITY, stdin);
+		flight->planeModel[wcslen(flight->planeModel) - 1] = 0;
 		fseek(stdin, 0, SEEK_END);
 		break;
 	case EXPENSES_OPTION:
-		scanf_s("%f", &flight->expenses);
+		wscanf_s(L"%f", &flight->expenses);
 		while (getchar() != '\n');
 		break;
 	case PASSENGER_COUNT_OPTION:
-		scanf_s("%d", &flight->passengerCount);
+		wscanf_s(L"%d", &flight->passengerCount);
 		while (getchar() != '\n');
 		break;
 	case CANCEL_OPTION:
@@ -80,7 +82,7 @@ int SelectField(enum EditMenuOption chosenOption, struct Flight* flight)
 
 struct Flight MakeFlight()
 {
-	struct Flight flight = { 0, 0, "?", "?", 0.0f };
+	struct Flight flight = { 0, 0, L"Не задано", L"Не задано", 0.0f };
 	enum EditMenuOption chosenOption = FLIGHT_NUM_OPTION;
 
 	while (TRUE)
@@ -104,7 +106,7 @@ struct Flight MakeFlight()
 				return flight;
 			break;
 		case ESC_KEY:
-			return (struct Flight){ -1, 0, "[UNDEFINED]", "[UNDEFINED]", 0.0f };
+			return (struct Flight){ -1, 0, L"Не задано", L"Не задано", 0.0f };
 		}
 	}
 }
@@ -147,8 +149,8 @@ static void AlterFlight(struct Node* node)
 		return;
 
 	struct Flight flight = node->flight;
-	strcpy(flight.flightTitle, node->flight.flightTitle);
-	strcpy(flight.planeModel, node->flight.planeModel);
+	wcsncpy(flight.flightTitle, node->flight.flightTitle, TITLE_CAPACITY);
+	wcsncpy(flight.planeModel, node->flight.planeModel, TITLE_CAPACITY);
 	enum EditMenuOption chosenOpt = FLIGHT_NUM_OPTION;
 
 	while (TRUE)
@@ -157,7 +159,7 @@ static void AlterFlight(struct Node* node)
 		system("cls");
 		SetConsoleColor(0, 15);
 		puts("");
-		puts(MAIN_HEADER);
+		_putws(MAIN_HEADER);
 		SetConsoleColor(15, 0);
 		for (enum EditMenuOption i = FLIGHT_NUM_OPTION; i < EDIT_MENU_SIZE; i++)
 		{
@@ -183,7 +185,7 @@ static void AlterFlight(struct Node* node)
 				}
 			}
 
-			printf("%s", EDIT_MENU_OPTIONS[i]);
+			wprintf(L"%s", EDIT_MENU_OPTIONS[i]);
 			if (i == CANCEL_OPTION || i == SAVE_OPTION || i == DELETE_OPTION)
 				puts("");
 			SetConsoleColor(15, 0);
@@ -191,51 +193,51 @@ static void AlterFlight(struct Node* node)
 			switch (i)
 			{
 			case FLIGHT_NUM_OPTION:
-				printf("%15d\t", node->flight.flightNumber);
+				wprintf(L"%15d\t", node->flight.flightNumber);
 				if (flight.flightNumber != node->flight.flightNumber)
 				{
 					SetConsoleColor(6, 0);
-					printf("\t| %17d |", flight.flightNumber);
+					wprintf(L"\t| %17d |", flight.flightNumber);
 					SetConsoleColor(15, 0);
 				}
 				puts("");
 				break;
 			case FLIGHT_TITLE_OPTION:
-				printf("%15s\t", node->flight.flightTitle);
-				if (strcmp(flight.flightTitle, node->flight.flightTitle))
+				wprintf(L"%15s\t", node->flight.flightTitle);
+				if (wcscmp(flight.flightTitle, node->flight.flightTitle))
 				{
 					SetConsoleColor(6, 0);
-					printf("\t| %17s |", flight.flightTitle);
+					wprintf(L"\t| %17s |", flight.flightTitle);
 					SetConsoleColor(15, 0);
 				}
 				puts("");
 				break;
 			case PLANE_MODEL_OPTION:
-				printf("%15s\t", node->flight.planeModel);
-				if (strcmp(flight.planeModel, node->flight.planeModel))
+				wprintf(L"%15s\t", node->flight.planeModel);
+				if (wcscmp(flight.planeModel, node->flight.planeModel))
 				{
 					SetConsoleColor(6, 0);
-					printf("\t| %17s |", flight.planeModel);
+					wprintf(L"\t| %17s |", flight.planeModel);
 					SetConsoleColor(15, 0);
 				}
 				puts("");
 				break;
 			case EXPENSES_OPTION:
-				printf("%14.2f$\t", node->flight.expenses);
+				wprintf(L"%14.2f РУБ\t", node->flight.expenses);
 				if (flight.expenses != node->flight.expenses)
 				{
 					SetConsoleColor(6, 0);
-					printf("\t| %16.2f$ |", flight.expenses);
+					wprintf(L"\t| %16.2f РУБ |", flight.expenses);
 					SetConsoleColor(15, 0);
 				}
 				puts("");
 				break;
 			case PASSENGER_COUNT_OPTION:
-				printf("%15d\t", node->flight.passengerCount);
+				wprintf(L"%15d\t", node->flight.passengerCount);
 				if (flight.passengerCount != node->flight.passengerCount)
 				{
 					SetConsoleColor(6, 0);
-					printf("\t| %17d |", flight.passengerCount);
+					wprintf(L"\t| %17d |", flight.passengerCount);
 					SetConsoleColor(15, 0);
 				}
 				puts("");
@@ -257,39 +259,39 @@ static void AlterFlight(struct Node* node)
 			switch (chosenOpt)
 			{
 			case FLIGHT_NUM_OPTION:
-				printf("\n Data> ");
+				wprintf(L"\n Введите данные:> ");
 				HideCursor(0);
-				scanf_s("%d", &flight.flightNumber);
+				wscanf_s(L"%d", &flight.flightNumber);
 				HideCursor(1);
 				while (getchar() != '\n');
 				continue;
 			case FLIGHT_TITLE_OPTION:
-				printf("\n Data> ");
+				wprintf(L"\n Введите данные:> ");
 				HideCursor(0);
-				fgets(flight.flightTitle, TITLE_CAPACITY, stdin);
-				flight.flightTitle[strlen(flight.flightTitle) - 1] = 0;
+				fgetws(flight.flightTitle, TITLE_CAPACITY, stdin);
+				flight.flightTitle[wcslen(flight.flightTitle) - 1] = 0;
 				fseek(stdin, 0, SEEK_END);
 				HideCursor(1);
 				continue;
 			case PLANE_MODEL_OPTION:
-				printf("\n Data> ");
+				wprintf(L"\n Введите данные:> ");
 				HideCursor(0);
-				fgets(flight.planeModel, PLANE_MODEL_CAPACITY, stdin);
+				fgetws(flight.planeModel, PLANE_MODEL_CAPACITY, stdin);
 				flight.planeModel[strlen(flight.planeModel) - 1] = 0;
 				fseek(stdin, 0, SEEK_END);
 				HideCursor(1);
 				continue;
 			case EXPENSES_OPTION:
-				printf("\n Data> ");
+				wprintf(L"\n Введите данные:> ");
 				HideCursor(0);
-				scanf_s("%f", &flight.expenses);
+				wscanf_s(L"%f", &flight.expenses);
 				HideCursor(1);
 				while (getchar() != '\n');
 				continue;
 			case PASSENGER_COUNT_OPTION:
-				printf("\n Data> ");
+				wprintf(L"\n Введите данные:> ");
 				HideCursor(0);
-				scanf_s("%d", &flight.passengerCount);
+				wscanf_s(L"%d", &flight.passengerCount);
 				HideCursor(1);
 				while (getchar() != '\n');
 				continue;
@@ -301,10 +303,10 @@ static void AlterFlight(struct Node* node)
 					|| node->flight.passengerCount != flight.passengerCount)
 				{
 						SetConsoleColor(6, 0);
-						printf("\n [CONFIRMATION] Enter Flight Number> ");
+						wprintf(L"\n [ПОДТВЕРЖДЕНИЕ] Подтвердите номер рейса для реадктирования записи:> ");
 						SetConsoleColor(15, 0);
 						HideCursor(0);
-						scanf_s("%d", &testValue);
+						wscanf_s(L"%d", &testValue);
 						while (getchar() != '\n');
 						HideCursor(1);
 
@@ -313,14 +315,14 @@ static void AlterFlight(struct Node* node)
 							node->flight = flight;
 							SaveData(first);
 							SetConsoleColor(10, 0);
-							puts(" [SUCCESS] Edit confirmed\n");
+							_putws(L" [УСПЕХ] Изменение успешно подтверждено\n");
 							putchar(' ');
 							SetConsoleColor(15, 0);
 							system("pause");
 							return;
 						}
 						SetConsoleColor(4, 0);
-						puts(" [FAILURE] Invalid Confirmation Key\n");
+						_putws(L" [ОШИБКА] Операция редактирование отклонена. Неверный номер рейса\n");
 						putchar(' ');
 						SetConsoleColor(15, 0);
 						system("pause");
@@ -328,17 +330,17 @@ static void AlterFlight(struct Node* node)
 				}
 				
 				SetConsoleColor(3, 0);
-				puts("\n [INFO] No changes were made\n");
+				_putws(L"\n [УВЕДОМЛЕНИЕ] Не было внесено изменений в запись\n");
 				putchar(' ');
 				SetConsoleColor(15, 0);
 				system("pause");
 				continue;
 			case DELETE_OPTION:
 				SetConsoleColor(6, 0);
-				printf("\n [CONFIRMATION] Enter Flight Number> ");
+				wprintf(L"\n [ПОДТВЕРЖДЕНИЕ] Подтвердите номер рейса для удаления записи:> ");
 				SetConsoleColor(15, 0);
 				HideCursor(0);
-				scanf_s("%d", &testValue);
+				wscanf_s(L"%d", &testValue);
 				while (getchar() != '\n');
 				HideCursor(TRUE);
 				if (testValue == node->flight.flightNumber)
@@ -346,14 +348,14 @@ static void AlterFlight(struct Node* node)
 					EraseFlight(node->flight.flightNumber);
 					SaveData(first);
 					SetConsoleColor(10, 0);
-					puts(" [SUCCESS] Deletion was successful\n");
+					_putws(L" [УСПЕХ] Операция удаления одобрена\n");
 					putchar(' ');
 					SetConsoleColor(15, 0);
 					system("pause");
 					return;
 				} 
 				SetConsoleColor(4, 0);
-				puts(" [FAILURE] Invalid Confirmation Key\n");
+				_putws(L" [ОШИБКА] Операция удаления отклонена. Неверный номер рейса\n");
 				putchar(' ');
 				SetConsoleColor(15, 0);
 				system("pause");

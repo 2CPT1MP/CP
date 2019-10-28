@@ -1,12 +1,12 @@
-#pragma once
-#define TABLE_HEADER "    FLIGHT NUMBER | FLIGHT TITLE |   PLANE MODEL |       EXPENSES |     PASSENGERS "
+﻿#pragma once
+#define TABLE_HEADER L"     НОМЕР РЕЙСА | НАИМЕНОВАНИЕ |   МОДЕЛЬ САМОЛЁТА |       РАССТРАТЫ | ПАССАЖИРЫ"
 
 #define TITLE_CAPACITY 15
 #define PLANE_MODEL_CAPACITY 15
 struct Flight
 {
 	int flightNumber, passengerCount;
-	char flightTitle[TITLE_CAPACITY], planeModel[PLANE_MODEL_CAPACITY];
+	wchar_t flightTitle[TITLE_CAPACITY], planeModel[PLANE_MODEL_CAPACITY];
 	float expenses;
 };
 

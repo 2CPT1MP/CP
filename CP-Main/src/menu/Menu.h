@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <Windows.h>
-#define MAIN_HEADER      "                                  FLIGHTS DATABASE                                   "
-#define MAIN_HEADER_LINE "                                                                                     "            
+#define MAIN_HEADER      L"                              БАЗА ДАННЫХ РЕЙСОВ САМОЛЁТОВ                       "
+#define MAIN_HEADER_LINE L"                                                                                 "            
 
 #define ESC_KEY 27
 #define ENTER_KEY 13
@@ -10,12 +10,12 @@
 
 
 #define MAIN_MENU_SIZE 6
-static const char* const MAIN_MENU_OPTIONS[MAIN_MENU_SIZE] = { "  Open text file ",
-															   "  Display sheet  ",
-														       "  Append record  ",
-														       "  Find records   ", 
-														       "  Save data as   ", 
-														       "  Exit program   "};
+static const wchar_t* const MAIN_MENU_OPTIONS[MAIN_MENU_SIZE] = { L"  Открыть файл     ",
+																  L"  Показать всё     ",
+														          L"  Добавить запись  ",
+																  L"  Поиск записи     ", 
+																  L"  Сохранить как    ", 
+																  L"  Завершить работу "};
 enum MainMenuOption
 {
 	OPEN_OPTION, DISPLAY_OPTION, APPEND_OPTION,
@@ -24,14 +24,14 @@ enum MainMenuOption
 
 
 #define EDIT_MENU_SIZE 8
-static const char* const EDIT_MENU_OPTIONS[EDIT_MENU_SIZE] = { "  Flight Number ",
-										                       "  Flight Title  ",
-										                       "  Plane Model   ",
-										                       "  Expenses      ",
-										                       "  Passengers    ",
-	                                                           "  CANCEL        ",
-	                                                           "  SAVE          ",
-											                   "  DELETE        "};
+static const wchar_t* const EDIT_MENU_OPTIONS[EDIT_MENU_SIZE] = { L"  Номер рейса       ",
+										                          L"  Наименование      ",
+										                          L"  Модель самолёта   ",
+																  L"  Растраты          ",
+										                          L"  Кол-во пассажиров ",
+	                                                              L"  ВЫХОД             ",
+	                                                              L"  СОХРАНЕНИЕ        ",
+											                      L"  УДАЛЕНИЕ          "};
 enum EditMenuOption
 {
 	FLIGHT_NUM_OPTION, FLIGHT_TITLE_OPTION, PLANE_MODEL_OPTION, EXPENSES_OPTION, 
