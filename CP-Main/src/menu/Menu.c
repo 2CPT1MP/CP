@@ -237,7 +237,7 @@ void NewLine()
 	COORD winPos = (COORD) { info.dwSize.X, info.dwSize.Y };
 
 	for (COORD cursorPos = GetConsoleCursorPosition(); cursorPos.X < winPos.X; cursorPos.X++)
-		putchar(' ');
+		putwchar(' ');
 
 }
 
