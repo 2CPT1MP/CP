@@ -132,11 +132,107 @@ void DrawMainMenuFrame(enum MainMenuOption chosenOption)
 	WipeRows();
 }
 
+void PrintAlterationFlightValues(const struct Flight* newFlight, const struct Flight* originalFlight, const enum EditMenuOption menuOption)
+{
+	switch (menuOption)
+	{
+	case FLIGHT_NUM_OPTION:
+		wprintf(L"%25d\t", originalFlight->flightNumber);
+		if (newFlight->flightNumber != originalFlight->flightNumber)
+		{
+			SetConsoleColor(YELLOW_COLOR, BLACK_COLOR);
+			wprintf(L"| %23d |", newFlight->flightNumber);
+			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+		}
+		break;
+	case FLIGHT_TITLE_OPTION:
+		wprintf(L"%24s\t", originalFlight->flightTitle);
+		if (wcscmp(originalFlight->flightTitle, newFlight->flightTitle))
+		{
+			SetConsoleColor(YELLOW_COLOR, BLACK_COLOR);
+			wprintf(L"| %23s |", newFlight->flightTitle);
+			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+		}
+		break;
+	case PLANE_MODEL_OPTION:
+		wprintf(L"%25s\t", originalFlight->planeModel);
+		if (wcscmp(originalFlight->planeModel, newFlight->planeModel))
+		{
+			SetConsoleColor(YELLOW_COLOR, BLACK_COLOR);
+			wprintf(L"| %23s |", newFlight->planeModel);
+			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+		}
+		break;
+	case EXPENSES_OPTION:
+		wprintf(L"%21.2f РУБ\t", originalFlight->expenses);
+		if (originalFlight->expenses != newFlight->expenses)
+		{
+			SetConsoleColor(YELLOW_COLOR, BLACK_COLOR);
+			wprintf(L"| %19.2f РУБ |", newFlight->expenses);
+			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+		}
+		break;
+	case PASSENGER_COUNT_OPTION:
+		wprintf(L"%25d\t", originalFlight->passengerCount);
+		if (originalFlight->passengerCount != newFlight->passengerCount)
+		{
+			SetConsoleColor(YELLOW_COLOR, BLACK_COLOR);
+			wprintf(L"| %23d |", newFlight->passengerCount);
+			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+		}
+		break;
+	}
+}
+
+
+
+void DisplayAlterationOptions(const struct Flight* newFlight, const struct Flight* originalFlight, const enum EditMenuOption chosenOption)
+{
+	for (enum EditMenuOption i = FLIGHT_NUM_OPTION; i < EDIT_MENU_SIZE; i++)
+	{
+		if (i == CANCEL_OPTION)
+			NewLine();
+		NewLine();
+
+		if (i == chosenOption)
+		{
+			switch (i)
+			{
+			case DELETE_OPTION:
+				SetConsoleColor(WHITE_COLOR, RED_COLOR);
+				break;
+			case SAVE_OPTION:
+				SetConsoleColor(BLACK_COLOR, GREEN_COLOR);
+				break;
+			case CANCEL_OPTION:
+				SetConsoleColor(BLACK_COLOR, YELLOW_COLOR);
+				break;
+			default:
+				SetConsoleColor(BLACK_COLOR, WHITE_COLOR);
+				break;
+			}
+		}
+		wprintf(EDIT_MENU_OPTIONS[i]);
+		SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+		PrintAlterationFlightValues(newFlight, originalFlight, i);
+	}
+}
+
+
+void DrawFlightAlterationFrame(const struct Flight* newFlight, const struct Flight* originalFlight, const enum EditMenuOption chosenOption)
+{
+	DisplayMainHeader();
+	DisplayAlterationOptions(newFlight, originalFlight, chosenOption);
+	WipeRows();
+}
+
 
 static void Run(const enum Option chosenOption)
 {
 	struct Flight flight;
+	struct Node* nodeAddress;
 	int isDuplicate = FALSE;
+	int inputInt = 0;
 	switch (chosenOption)
 	{
 	case OPEN_OPTION:
@@ -146,7 +242,7 @@ static void Run(const enum Option chosenOption)
 		break;
 	case DISPLAY_OPTION:
 		HideCursor(TRUE);              
-		DisplayAll();
+		DisplayRecords(first);
 		break;
 	case APPEND_OPTION:
 		while (TRUE)
@@ -171,12 +267,19 @@ static void Run(const enum Option chosenOption)
 					SetConsoleColor(10, 0);
 					NewLine();
 					wprintf(L" [УСПЕХ] Запись была успешно добавлена ");
+					SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+					NewLine();
+					WipeRows();
+					_getch();
+					return;
+					
 				}
 				else {
 					SetConsoleColor(4, 0);
 					NewLine();
 					wprintf(L" [ОШИБКА] Запись не добавлена. Введённый номер рейса уже существует ");
 				}
+
 			}
 			else
 			{
@@ -184,24 +287,51 @@ static void Run(const enum Option chosenOption)
 				NewLine();
 				wprintf(L" [ОШИБКА] Запись не добавлена. Предоставлена неверная информация о рейсе ");
 			}
-			SetConsoleColor(15, 0);
+			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 			NewLine();
 			WipeRows();
 			_getch();
 			continue;
 		}
+		break;
 	case SEEK_OPTION:
-
+		NewLine();
+		NewLine();
+		SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+		wprintf(L" Номер рейса> ");
+		SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+		HideCursor(FALSE);
+		wscanf_s(L"%d", &inputInt);
+		HideCursor(TRUE);
+		nodeAddress = FindFlightByNum(inputInt);
+		if (nodeAddress != EOF)
+			DisplayRecords(nodeAddress);
+		else
+		{
+			NewLine();
+			SetConsoleColor(YELLOW_COLOR, BLACK_COLOR);
+			wprintf(L" [СООБЩЕНИЕ] Рейс не найден");
+			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+			NewLine();
+			_getch();
+		}
 		break;
 	case SAVE_OPTION:
 		
-
+		break;
 	case EXIT_OPTION:
 		if (SaveData(first) != -1)
 			exit(0);
 		else
-			
-			/*OTHERWISE*/;
+		{
+			NewLine();
+			SetConsoleColor(RED_COLOR, BLACK_COLOR);
+			wprintf(L" [ОШИБКА] Невозможно сохранить изменения");
+			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+			NewLine();
+			_getch();
+		}
+		break;
 	}
 }
 
@@ -250,6 +380,7 @@ void ShowMenu()
 	{
 		HideCursor(TRUE);
 		DrawMainMenuFrame(chosenOption);
+		WipeRows();
 		
 		switch (getch())
 		{

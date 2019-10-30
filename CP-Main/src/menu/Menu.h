@@ -24,23 +24,31 @@ enum MainMenuOption
 
 
 #define EDIT_MENU_SIZE 8
-static const wchar_t* const EDIT_MENU_OPTIONS[EDIT_MENU_SIZE] = { L"  Номер рейса       ",
-										                          L"  Наименование      ",
-										                          L"  Модель самолёта   ",
-																  L"  Растраты          ",
-										                          L"  Кол-во пассажиров ",
-	                                                              L"  ВЫХОД             ",
-	                                                              L"  СОХРАНЕНИЕ        ",
-											                      L"  УДАЛЕНИЕ          "};
+static const wchar_t* const EDIT_MENU_OPTIONS[EDIT_MENU_SIZE] = { L"  № рейса            \t",
+										                          L"  Наименование рейса \t ",
+										                          L"  Модель самолёта    \t",
+																  L"  Растраты           \t",
+										                          L"  Кол-во пассажиров  \t",
+	                                                              L"  ВЫХОД              \t",
+	                                                              L"  СОХРАНЕНИЕ         \t",
+											                      L"  УДАЛЕНИЕ           \t"};
 enum EditMenuOption
 {
 	FLIGHT_NUM_OPTION, FLIGHT_TITLE_OPTION, PLANE_MODEL_OPTION, EXPENSES_OPTION, 
-	PASSENGER_COUNT_OPTION, CANCEL_OPTION, SAVE_OPTION, DELETE_OPTION
+	PASSENGER_COUNT_OPTION, CANCEL_OPTION,  SAVE_OPTION,        DELETE_OPTION
+};
+
+enum ConsoleColor
+{
+	WHITE_COLOR = 15, BLACK_COLOR = 0, RED_COLOR = 4, 
+	GREEN_COLOR = 2,  YELLOW_COLOR= 6, BLUE_COLOR = 3
 };
 
 
 void ShowMenu();
+void WipeRows();
 void DisplayMainHeader();
+void DrawFlightAlterationFrame(const struct Flight* newFlight, const struct Flight* originalFlight, const enum EditMenuOption chosenOption);
 void DrawEditMenuFrame(enum EditMenuOption chosenOption, const struct Flight* flight);
 void SetConsoleColor(int textColor, int bgColor);
 void HideCursor(int state);
