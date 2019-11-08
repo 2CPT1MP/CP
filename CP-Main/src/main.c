@@ -7,6 +7,7 @@
 #include <locale.h>
 #include <io.h>
 #include <fcntl.h>
+#include "Text.h"
 
 
 void SetFontInfo()

@@ -122,7 +122,10 @@ struct Flight MakeFlight()
 			break;
 		case ENTER_KEY:
 			SelectField(chosenOption, &flight);
-			return flight;
+			if (chosenOption == SAVE_OPTION || chosenOption == EXIT_OPTION)
+				return flight;
+			else
+				continue;
 		case ESC_KEY:
 			return (struct Flight){ -1, 0, L"Не задано", L"Не задано", 0.0f };
 		}

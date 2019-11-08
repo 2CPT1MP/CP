@@ -139,12 +139,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\io\binary\Binary.c" />
+    <ClCompile Include="src\io\text\Text.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\menu\Menu.c" />
     <ClCompile Include="src\struct\Struct.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\io\binary\Binary.h" />
+    <ClInclude Include="src\io\text\Text.h" />
     <ClInclude Include="src\menu\Menu.h" />
     <ClInclude Include="src\struct\Struct.h" />
   </ItemGroup>

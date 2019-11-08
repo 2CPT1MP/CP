@@ -1,8 +1,8 @@
 ﻿#pragma once
 #define TABLE_HEADER L"     НОМЕР РЕЙСА | НАИМЕНОВАНИЕ |   МОДЕЛЬ САМОЛЁТА |       РАССТРАТЫ | ПАССАЖИРЫ"
 
-#define TITLE_CAPACITY 15
-#define PLANE_MODEL_CAPACITY 15
+#define TITLE_CAPACITY 21
+#define PLANE_MODEL_CAPACITY 21
 struct Flight
 {
 	int flightNumber, passengerCount;

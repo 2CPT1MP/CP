@@ -6,6 +6,7 @@
 #include "Menu.h"
 #include "Struct.h"
 #include "Binary.h"
+#include "Text.h"
 
 
 HANDLE outHandle;
@@ -233,12 +234,42 @@ static void Run(const enum Option chosenOption)
 	struct Node* nodeAddress;
 	int isDuplicate = FALSE;
 	int inputInt = 0;
+	wchar_t inputStr[40] = { 0 };
 	switch (chosenOption)
 	{
 	case OPEN_OPTION:
-		
-		/*ADD CODE HERE*/
-		
+		NewLine();
+		NewLine();
+		SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+		wprintf(L" Имя/путь> ");
+		SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+		HideCursor(FALSE);
+		fgetws(inputStr, 39, stdin);
+		for (long i = 0; i < sizeof(inputStr) / sizeof(wchar_t); i++)
+			if (inputStr[i] == '\n')
+			{
+				inputStr[i] = '\0';
+				break;
+			}
+		HideCursor(TRUE);
+		if (ReadText(inputStr) == -1)
+		{
+			NewLine();
+			SetConsoleColor(RED_COLOR, BLACK_COLOR);
+			wprintf(L" [ОШИБКА] Ошибка при попытке доступа");
+			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+			NewLine();
+			_getch();
+		}
+		else {
+			SetConsoleColor(GREEN_COLOR, BLACK_COLOR);
+			NewLine();
+			wprintf(L" [УСПЕХ] Успешное чтение ");
+			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+			NewLine();
+			WipeRows();
+			_getch();
+		}
 		break;
 	case DISPLAY_OPTION:
 		HideCursor(TRUE);              
@@ -264,7 +295,7 @@ static void Run(const enum Option chosenOption)
 				{
 					AddFlight(&flight);
 					SaveData(first);
-					SetConsoleColor(10, 0);
+					SetConsoleColor(GREEN_COLOR, BLACK_COLOR);
 					NewLine();
 					wprintf(L" [УСПЕХ] Запись была успешно добавлена ");
 					SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
@@ -275,11 +306,10 @@ static void Run(const enum Option chosenOption)
 					
 				}
 				else {
-					SetConsoleColor(4, 0);
+					SetConsoleColor(RED_COLOR, BLACK_COLOR);
 					NewLine();
 					wprintf(L" [ОШИБКА] Запись не добавлена. Введённый номер рейса уже существует ");
 				}
-
 			}
 			else
 			{
@@ -316,8 +346,39 @@ static void Run(const enum Option chosenOption)
 			_getch();
 		}
 		break;
-	case SAVE_OPTION:
-		
+	case SAVE_FILE_OPTION:
+		NewLine();
+		NewLine();
+		SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+		wprintf(L" Имя/путь> ");
+		SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+		HideCursor(FALSE);
+		fgetws(inputStr, 39, stdin);
+		for (long i = 0; i < sizeof(inputStr)/sizeof(wchar_t); i++)
+			if (inputStr[i] == '\n')
+			{
+				inputStr[i] = '\0';
+				break;
+			}
+		HideCursor(TRUE);
+		if (SaveAsText(inputStr) == -1)
+		{
+			NewLine();
+			SetConsoleColor(RED_COLOR, BLACK_COLOR);
+			wprintf(L" [ОШИБКА] Ошибка при попытке доступа");
+			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+			NewLine();
+			_getch();
+		}
+		else {
+			SetConsoleColor(GREEN_COLOR, BLACK_COLOR);
+			NewLine();
+			wprintf(L" [УСПЕХ] Успешное сохранение ");
+			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+			NewLine();
+			WipeRows();
+			_getch();
+		}
 		break;
 	case EXIT_OPTION:
 		if (SaveData(first) != -1)
