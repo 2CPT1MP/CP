@@ -32,6 +32,7 @@ int ReadText(const wchar_t* filename)
 	FILE* fStream = _wfopen(filename, L"rt, ccs=UNICODE");
 	if (!fStream)
 		return -1;
+	DelAll();
 
 	_setmode(_fileno(fStream), _O_U16TEXT);
 

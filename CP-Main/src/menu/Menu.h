@@ -9,17 +9,18 @@
 #define UP_ARROW_KEY 72
 
 
-#define MAIN_MENU_SIZE 6
-static const wchar_t* const MAIN_MENU_OPTIONS[MAIN_MENU_SIZE] = { L"  Открыть файл     ",
-																  L"  Показать всё     ",
-														          L"  Добавить запись  ",
-																  L"  Поиск записи     ", 
-																  L"  Сохранить как    ", 
-																  L"  Завершить работу "};
+#define MAIN_MENU_SIZE 7
+static const wchar_t* const MAIN_MENU_OPTIONS[MAIN_MENU_SIZE] = { L"  Открыть файл         ",
+																  L"  Показать всё         ",
+														          L"  Добавить запись      ",
+																  L"  Сортировка по номеру ",
+																  L"  Поиск записи         ", 
+																  L"  Сохранить как        ", 
+																  L"  Завершить работу     "};
 enum MainMenuOption
 {
-	OPEN_OPTION, DISPLAY_OPTION, APPEND_OPTION,
-	SEEK_OPTION, SAVE_FILE_OPTION, EXIT_OPTION
+	OPEN_OPTION, DISPLAY_OPTION, APPEND_OPTION, SORT_OPTION,
+	SEEK_OPTION, SAVE_FILE_OPTION, EXIT_OPTION,
 };
 
 

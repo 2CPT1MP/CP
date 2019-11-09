@@ -1,5 +1,5 @@
 ﻿#pragma once
-#define TABLE_HEADER L"     НОМЕР РЕЙСА | НАИМЕНОВАНИЕ |   МОДЕЛЬ САМОЛЁТА |       РАССТРАТЫ | ПАССАЖИРЫ"
+#define TABLE_HEADER L"  № РЕЙСА      НАЗВАНИЕ РЕЙСА\tМОДЕЛЬ САМОЛЁТА\t   РАССТРАТЫ  ПАССАЖИРЫ"
 
 #define TITLE_CAPACITY 21
 #define PLANE_MODEL_CAPACITY 21
@@ -21,3 +21,6 @@ void EraseFlight(const int flightNumber);
 void DisplayRecords(struct Node* chosenRecord);
 struct Flight MakeFlight();
 struct Node* FindFlightByNum(int flightNumber);
+int GetIndex(const struct Node* node);
+void SortListByNum();
+void DelAll();

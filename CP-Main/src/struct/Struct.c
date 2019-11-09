@@ -20,6 +20,55 @@ int AreEqualFlights(const struct Flight* firstFlight, const struct Flight* secon
 		firstFlight->passengerCount == secondFlight->passengerCount;
 }
 
+int GetIndex(const struct Node* node)
+{
+	int j = 0;
+	for (const struct Node* i = first; i != NULL; i = i->next)
+	{
+		if (node == i)
+			return j;
+		j++;
+	}
+}
+
+void SortListByNum()
+{
+	for (struct Node* i = first; i != NULL; i = i->next)
+	{
+		for (struct Node* j = first; j->next != NULL; j = j->next)
+		{
+			if (j->flight.flightNumber > j->next->flight.flightNumber)
+			{
+				struct Flight t = j->flight;
+				j->flight = j->next->flight;
+				j->next->flight = t;
+			}
+		}
+	}
+}
+
+void DelAll()
+{
+	if (!first)
+		return;
+	if (!first->next)
+	{
+		free(first);
+	}
+	else {
+		for (struct Node* i = first->next; i != NULL; i = i->next)
+		{
+			free(i->previous);
+			if (!i->next)
+			{
+				free(i);
+				break;
+			}
+		}
+	}
+	first = last = NULL;
+}
+
 
 struct Node* FindFlightByNum(int flightNumber)
 {
