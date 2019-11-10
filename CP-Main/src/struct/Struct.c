@@ -11,6 +11,32 @@
 struct Node *first = 0, *last = 0;
 
 
+long GetTotalPassengerCount()
+{
+	long passCount = 0;
+	for (const struct Node* i = first; i != NULL; i = i->next)
+		passCount += i->flight.passengerCount;
+	return passCount;
+}
+
+
+float GetTotalExpenses()
+{
+	float totalExp = 0.0f;
+	for (const struct Node* i = first; i != NULL; i = i->next)
+		totalExp += i->flight.expenses;
+	return totalExp;
+}
+
+
+float GetAvgExpenses()
+{
+	float totalExp = GetTotalExpenses();
+	long passCount = GetTotalPassengerCount();
+	return (passCount > 0)? totalExp / passCount : 0.0f ;
+}
+
+
 int AreEqualFlights(const struct Flight* firstFlight, const struct Flight* secondFlight)
 {
 	return firstFlight->expenses == secondFlight->expenses           &&
@@ -79,6 +105,18 @@ struct Node* FindFlightByNum(int flightNumber)
 }
 
 
+int HasAdditionalElms(const struct Node* node)
+{
+	int count = 0;
+	for (struct Node* i = node; i != NULL; i = i->next)
+		count++;
+	if (count > 9)
+		return 1;
+	else
+		return 0;
+}
+
+
 void AddFlight(const struct Flight* flight)
 {
 	if (!last)
@@ -103,9 +141,9 @@ int SelectField(enum EditMenuOption chosenOption, struct Flight* flight)
 	if (chosenOption >= FLIGHT_NUM_OPTION &&
 		chosenOption <= PASSENGER_COUNT_OPTION)
 	{
-		SetConsoleColor(3, 0);
+		SetConsoleColor(GREEN_COLOR, BLACK_COLOR);
 		NewLine();
-		wprintf(L" Введите данные> ");
+		wprintf(L"  Введите данные> ");
 		HideCursor(FALSE);
 	}
 	
@@ -171,7 +209,7 @@ struct Flight MakeFlight()
 			break;
 		case ENTER_KEY:
 			SelectField(chosenOption, &flight);
-			if (chosenOption == SAVE_OPTION || chosenOption == EXIT_OPTION)
+			if (chosenOption == SAVE_OPTION || chosenOption == CANCEL_OPTION)
 				return flight;
 			else
 				continue;
@@ -242,44 +280,54 @@ static void AlterFlight(struct Node* node)
 			{
 			case FLIGHT_NUM_OPTION:
 				NewLine();
-				wprintf(L" Введите данные> ");
+				SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+				wprintf(L"  Введите данные> ");
 				HideCursor(FALSE);
 				wscanf_s(L"%d", &newFlight.flightNumber);
+				SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 				HideCursor(TRUE);
 				while (getwchar() != '\n');
 				continue;
 			case FLIGHT_TITLE_OPTION:
 				NewLine();
-				wprintf(L" Введите данные> ");
+				SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+				wprintf(L"  Введите данные> ");
 				HideCursor(FALSE);
 				fgetws(newFlight.flightTitle, TITLE_CAPACITY, stdin);
+				SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 				newFlight.flightTitle[wcslen(newFlight.flightTitle) - 1] = 0;
 				fseek(stdin, 0, SEEK_END);
 				HideCursor(TRUE);
 				continue;
 			case PLANE_MODEL_OPTION:
 				NewLine(FALSE);
-				wprintf(L" Введите данные> ");
+				SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+				wprintf(L"  Введите данные> ");
 				HideCursor(FALSE);
 				fgetws(newFlight.planeModel, PLANE_MODEL_CAPACITY, stdin);
+				SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 				newFlight.planeModel[wcslen(newFlight.planeModel) - 1] = 0;
 				fseek(stdin, 0, SEEK_END);
 				HideCursor(TRUE);
 				continue;
 			case EXPENSES_OPTION:
 				NewLine();
-				wprintf(L" Введите данные> ");
+				SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+				wprintf(L"  Введите данные> ");
 				HideCursor(FALSE);
 				wscanf_s(L"%f", &newFlight.expenses);
+				SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 				HideCursor(TRUE);
 				while (getwchar() != '\n');
 				continue;
 			case PASSENGER_COUNT_OPTION:
 				NewLine();
-				wprintf(L" Введите данные> ");
+				SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+				wprintf(L"  Введите данные> ");
 				HideCursor(FALSE);
 				wscanf_s(L"%d", &newFlight.passengerCount);
-				HideCursor(1);
+				SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+				HideCursor(TRUE);
 				while (getwchar() != '\n');
 				continue;
 			case SAVE_OPTION:
@@ -287,7 +335,7 @@ static void AlterFlight(struct Node* node)
 				{
 						SetConsoleColor(YELLOW_COLOR, BLACK_COLOR);
 						NewLine();
-						wprintf(L" [ПОДТВЕРЖДЕНИЕ] Подтвердите номер рейса для реадктирования записи> ");
+						wprintf(L" [ПОДТВЕРЖДЕНИЕ] Подтвердите номер рейса для редактирования записи> ");
 						SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 						HideCursor(FALSE);
 						wscanf_s(L"%d", &testValue);
@@ -298,17 +346,23 @@ static void AlterFlight(struct Node* node)
 						{
 							node->flight = newFlight;
 							SaveData(first);
-							SetConsoleColor(10, 0);
+							SetConsoleColor(GREEN_COLOR, BLACK_COLOR);
 							wprintf(L" [УСПЕХ] Изменение успешно подтверждено");
 							NewLine();
-							SetConsoleColor(15, 0);
+							SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+							wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
+							SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+							NewLine();
 							_getwch();
 							return;
 						}
 						SetConsoleColor(RED_COLOR, BLACK_COLOR);
 						wprintf(L" [ОШИБКА] Операция редактирование отклонена. Неверный номер рейса");
 						NewLine();
-						SetConsoleColor(15, 0);
+						SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+						wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
+						SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+						NewLine();
 						_getwch();
 						continue;
 				}
@@ -316,7 +370,10 @@ static void AlterFlight(struct Node* node)
 				NewLine();
 				wprintf(L" [УВЕДОМЛЕНИЕ] Не было внесено изменений в запись");
 				NewLine();
-				SetConsoleColor(15, 0);
+				SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+				wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
+				SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+				NewLine();
 				_getwch();
 				continue;
 			case DELETE_OPTION:
@@ -335,14 +392,20 @@ static void AlterFlight(struct Node* node)
 					SetConsoleColor(10, 0);
 					wprintf(L" [УСПЕХ] Операция удаления одобрена");
 					NewLine();
+					SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+					wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
 					SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+					NewLine();
 					_getch();
 					return;
 				} 
 				SetConsoleColor(4, 0);
 				wprintf(L" [ОШИБКА] Операция удаления отклонена. Неверный номер рейса");
 				NewLine();
+				SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+				wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
 				SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+				NewLine();
 				_getch();
 				continue;
 			case CANCEL_OPTION:

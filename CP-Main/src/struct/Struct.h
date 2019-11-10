@@ -24,3 +24,7 @@ struct Node* FindFlightByNum(int flightNumber);
 int GetIndex(const struct Node* node);
 void SortListByNum();
 void DelAll();
+int HasAdditionalElms(const struct Node* node);
+long GetTotalPassengerCount();
+float GetTotalExpenses();
+float GetAvgExpenses();

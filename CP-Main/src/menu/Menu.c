@@ -41,6 +41,12 @@ void WipeRows()
 
 void DrawEditMenuFrame(enum EditMenuOption chosenOption, const struct Flight* flight)
 {
+	NewLine();
+	SetConsoleColor(3, BLACK_COLOR);
+	wprintf(L"  ДОБАВЛЕНИЕ НОВОГО РЕЙСА ");
+	NewLine();
+	SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+	
 	for (enum EditMenuOption i = FLIGHT_NUM_OPTION; i < EDIT_MENU_SIZE - 1; i++)
 	{
 		if (i == CANCEL_OPTION)
@@ -55,7 +61,7 @@ void DrawEditMenuFrame(enum EditMenuOption chosenOption, const struct Flight* fl
 				if (i == CANCEL_OPTION)
 					SetConsoleColor(0, 6);
 				else
-					SetConsoleColor(0, 14);
+					SetConsoleColor(0, 15);
 		}
 		wprintf(L"%s", EDIT_MENU_OPTIONS[i]);
 
@@ -67,7 +73,7 @@ void DrawEditMenuFrame(enum EditMenuOption chosenOption, const struct Flight* fl
 			wprintf(L"%20d  ", flight->flightNumber);
 			break;
 		case FLIGHT_TITLE_OPTION:
-			wprintf(L"%19s  ", flight->flightTitle);
+			wprintf(L"%20s  ", flight->flightTitle);
 			break;
 		case PLANE_MODEL_OPTION:
 			wprintf(L"%20s  ", flight->planeModel);
@@ -86,47 +92,65 @@ void DrawEditMenuFrame(enum EditMenuOption chosenOption, const struct Flight* fl
 }
 
 
-int lastGroupFlag = 0;
-struct Node* lastChosenNode;
+
+struct Node* lastChosenNode = -1;
 void DrawRecordsFrame(struct Node* chosenNode)
 {
 	DisplayMainHeader();
-	SetConsoleColor(GREEN_COLOR, BLACK_COLOR);
+	SetConsoleColor(3, BLACK_COLOR);
+	NewLine();
 	wprintf(L"%s", TABLE_HEADER);
-	//NewLine();
 	SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 	NewLine();
 	int j = 1;
 	if (chosenNode != first)
+		SetConsoleColor(15, 0);
+	else
+		SetConsoleColor(8, 0);
+	wprintf(L"\x2191");
+	SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+	NewLine();
+	if (HasAdditionalElms(chosenNode))
 	{
-		wprintf(L" ...");
-		NewLine();
+		lastChosenNode = chosenNode;
+
 	}
-	for (const struct Node* i = chosenNode; i != 0; i = i->next)
+
+	if (lastChosenNode == -1)
+		lastChosenNode = first;
+
+	for (const struct Node* i = lastChosenNode; i != 0; i = i->next)
 	{
-		if (lastGroupFlag)
-		{
-			i = lastChosenNode;
-			lastGroupFlag = NULL;
-		}
 		if (j > 10)
 		{
-			wprintf(L" ...");
+			SetConsoleColor(15, 0);
+			wprintf(L"\x2193");
 			NewLine();
 			break;
 		}
-
+		
+		
 		if (i == chosenNode)
-			SetConsoleColor(0, 14);
-		wprintf(L" %8d %19s %17s %12.2f %10d ", i->flight.flightNumber, i->flight.flightTitle,
+		{
+			SetConsoleColor(15, 0);
+			wprintf(L"\x2588 ");
+			SetConsoleColor(0, 15);
+		}else
+			wprintf(L"\x2591 ");
+		wprintf(L" %6d %19s %17s %12.2f %10d ", i->flight.flightNumber, i->flight.flightTitle,
 			i->flight.planeModel, i->flight.expenses, i->flight.passengerCount);
-		NewLine();
 		SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+		if (j <= 10 && i == last) {
+			NewLine();
+			SetConsoleColor(8, 0);
+			wprintf(L"\x2193");
+		}
+		NewLine();
 		j++;
 	}
 	NewLine();
 	SetConsoleColor(0, 15);
-	wprintf(L"             ENTER - Отредактировать запись        ESC - Вернутся назад");
+	wprintf(L"             ENTER - Перейти к записи        ESC - Вернутся назад");
 	NewLine();
 	SetConsoleColor(15, 0);
 	WipeRows();
@@ -136,11 +160,13 @@ void DrawRecordsFrame(struct Node* chosenNode)
 void DrawMainMenuFrame(enum MainMenuOption chosenOption)
 {
 	DisplayMainHeader();
+	SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+	NewLine();
 
 	for (enum MainMenuOption i = OPEN_OPTION; i < MAIN_MENU_SIZE; i++)
 	{
 		if (i == chosenOption) {
-			SetConsoleColor(0, 14);
+			SetConsoleColor(0, 15);
 			wprintf(L"%s", MAIN_MENU_OPTIONS[i]);
 			SetConsoleColor(15, 0);
 			NewLine();
@@ -168,7 +194,7 @@ void PrintAlterationFlightValues(const struct Flight* newFlight, const struct Fl
 		}
 		break;
 	case FLIGHT_TITLE_OPTION:
-		wprintf(L"%19s  ", originalFlight->flightTitle);
+		wprintf(L"%20s  ", originalFlight->flightTitle);
 		if (wcscmp(originalFlight->flightTitle, newFlight->flightTitle))
 		{
 			SetConsoleColor(YELLOW_COLOR, BLACK_COLOR);
@@ -210,6 +236,11 @@ void PrintAlterationFlightValues(const struct Flight* newFlight, const struct Fl
 
 void DisplayAlterationOptions(const struct Flight* newFlight, const struct Flight* originalFlight, const enum EditMenuOption chosenOption)
 {
+	NewLine();
+	SetConsoleColor(3, BLACK_COLOR);
+	wprintf(L"  РЕДАКТИРОВАНИЕ РЕЙСА ");
+	SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+
 	for (enum EditMenuOption i = FLIGHT_NUM_OPTION; i < EDIT_MENU_SIZE; i++)
 	{
 		if (i == CANCEL_OPTION)
@@ -245,6 +276,17 @@ void DrawFlightAlterationFrame(const struct Flight* newFlight, const struct Flig
 {
 	DisplayMainHeader();
 	DisplayAlterationOptions(newFlight, originalFlight, chosenOption);
+	SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+	NewLine();
+	NewLine();
+	NewLine();
+	SetConsoleColor(3, BLACK_COLOR);
+	wprintf(L"  СТАТИСТИКА ПО РЕЙСУ ");
+	NewLine();
+	SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+	wprintf(L"  Перевозка одного пассажира %11.2f РУБ", (originalFlight->passengerCount > 0) ? originalFlight->expenses / originalFlight->passengerCount : 0);
+	NewLine();
+
 	WipeRows();
 }
 
@@ -261,8 +303,8 @@ static void Run(const enum Option chosenOption)
 	case OPEN_OPTION:
 		NewLine();
 		NewLine();
-		SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
-		wprintf(L" Имя/путь> ");
+		SetConsoleColor(GREEN_COLOR, BLACK_COLOR);
+		wprintf(L"  Исходный файл> ");
 		SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 		HideCursor(FALSE);
 		fgetws(inputStr, 39, stdin);
@@ -278,15 +320,21 @@ static void Run(const enum Option chosenOption)
 		{
 			NewLine();
 			SetConsoleColor(RED_COLOR, BLACK_COLOR);
-			wprintf(L" [ОШИБКА] Ошибка при попытке доступа");
-			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+			wprintf(L" [ОШИБКА] Невозможно открыть файл");
+			NewLine();
+			SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+			wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
 			NewLine();
 			_getch();
+			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 		}
 		else {
 			SetConsoleColor(GREEN_COLOR, BLACK_COLOR);
 			NewLine();
-			wprintf(L" [УСПЕХ] Успешное чтение ");
+			wprintf(L" [УСПЕХ] Импорт завершён ");
+			NewLine();
+			SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+			wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
 			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 			NewLine();
 			WipeRows();
@@ -319,7 +367,10 @@ static void Run(const enum Option chosenOption)
 					SaveData(first);
 					SetConsoleColor(GREEN_COLOR, BLACK_COLOR);
 					NewLine();
-					wprintf(L" [УСПЕХ] Запись была успешно добавлена ");
+					wprintf(L" [УСПЕХ] Запись была добавлена ");
+					NewLine();
+					SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+					wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
 					SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 					NewLine();
 					WipeRows();
@@ -331,6 +382,9 @@ static void Run(const enum Option chosenOption)
 					SetConsoleColor(RED_COLOR, BLACK_COLOR);
 					NewLine();
 					wprintf(L" [ОШИБКА] Запись не добавлена. Введённый номер рейса уже существует ");
+					NewLine();
+					SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+					wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
 				}
 			}
 			else
@@ -338,6 +392,9 @@ static void Run(const enum Option chosenOption)
 				SetConsoleColor(4, 0);
 				NewLine();
 				wprintf(L" [ОШИБКА] Запись не добавлена. Предоставлена неверная информация о рейсе ");
+				NewLine();
+				SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+				wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
 			}
 			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 			NewLine();
@@ -349,8 +406,8 @@ static void Run(const enum Option chosenOption)
 	case SEEK_OPTION:
 		NewLine();
 		NewLine();
-		SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
-		wprintf(L" Номер рейса> ");
+		SetConsoleColor(GREEN_COLOR, BLACK_COLOR);
+		wprintf(L"  Номер рейса> ");
 		SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 		HideCursor(FALSE);
 		wscanf_s(L"%d", &inputInt);
@@ -363,7 +420,10 @@ static void Run(const enum Option chosenOption)
 		{
 			NewLine();
 			SetConsoleColor(YELLOW_COLOR, BLACK_COLOR);
-			wprintf(L" [СООБЩЕНИЕ] Рейс не найден");
+			wprintf(L" [ПРЕДУПРЕЖДЕНИЕ] Рейс не найден");
+			NewLine();
+			SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+			wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
 			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 			NewLine();
 			_getch();
@@ -372,8 +432,8 @@ static void Run(const enum Option chosenOption)
 	case SAVE_FILE_OPTION:
 		NewLine();
 		NewLine();
-		SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
-		wprintf(L" Имя/путь> ");
+		SetConsoleColor(GREEN_COLOR, BLACK_COLOR);
+		wprintf(L"  Конечный файл> ");
 		SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 		HideCursor(FALSE);
 		fgetws(inputStr, 39, stdin);
@@ -390,6 +450,9 @@ static void Run(const enum Option chosenOption)
 			NewLine();
 			SetConsoleColor(RED_COLOR, BLACK_COLOR);
 			wprintf(L" [ОШИБКА] Ошибка при попытке доступа");
+			NewLine();
+			SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+			wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
 			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 			NewLine();
 			_getch();
@@ -398,6 +461,9 @@ static void Run(const enum Option chosenOption)
 			SetConsoleColor(GREEN_COLOR, BLACK_COLOR);
 			NewLine();
 			wprintf(L" [УСПЕХ] Успешное сохранение ");
+			NewLine();
+			SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+			wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
 			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 			NewLine();
 			WipeRows();
@@ -412,6 +478,9 @@ static void Run(const enum Option chosenOption)
 			NewLine();
 			SetConsoleColor(RED_COLOR, BLACK_COLOR);
 			wprintf(L" [ОШИБКА] Невозможно сохранить изменения");
+			NewLine();
+			SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+			wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
 			SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 			NewLine();
 			_getch();
@@ -423,9 +492,35 @@ static void Run(const enum Option chosenOption)
 		NewLine();
 		SetConsoleColor(GREEN_COLOR, BLACK_COLOR);
 		wprintf(L" [УСПЕХ] Сортировка по номеру рейса прошла успешно");
+		NewLine();
+		SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+		wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
 		SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 		NewLine();
 		_getch();
+		break;
+	case STAT_OPTION:
+		DisplayMainHeader();
+		NewLine();
+		SetConsoleColor(3, BLACK_COLOR);
+		wprintf(L"  СТАТИСТИКА ПО РЕЙСАМ ");
+		NewLine();
+		SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+		wprintf(L"  Общее число пассажиров   %30d", GetTotalPassengerCount());
+		NewLine();
+		wprintf(L"  Общие затраты по рейсам  %30.2f", GetTotalExpenses());
+		NewLine();
+		wprintf(L"  Затраты на пассажира     %30.2f", GetAvgExpenses());
+		WipeRows();
+		NewLine();
+		SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
+		NewLine();
+		NewLine();
+		wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
+		SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
+		NewLine();
+		_getch();
+		break;
 	}
 }
 
