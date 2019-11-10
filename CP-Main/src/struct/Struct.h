@@ -18,7 +18,7 @@ struct Node
 
 void AddFlight(const struct Flight* flight);
 void EraseFlight(const int flightNumber);
-void DisplayRecords(struct Node* chosenRecord);
+void DisplayRecords(struct Node* chosenRecord, int seekMode);
 struct Flight MakeFlight();
 struct Node* FindFlightByNum(int flightNumber);
 int GetIndex(const struct Node* node);
