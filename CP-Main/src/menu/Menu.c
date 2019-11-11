@@ -92,32 +92,38 @@ void DrawEditMenuFrame(enum EditMenuOption chosenOption, const struct Flight* fl
 }
 
 
-
 struct Node* lastChosenNode = -1;
-void DrawRecordsFrame(struct Node* chosenNode)
+void DrawRecordsFrame(struct Node* chosenNode, int seekMode)
 {
 	DisplayMainHeader();
 	SetConsoleColor(3, BLACK_COLOR);
 	NewLine();
+	SetConsoleColor(3, BLACK_COLOR);
+	wprintf(L" %s", (seekMode) ? L" ПОИСК ЗАПИСИ ПО НОМЕРУ РЕЙСА " : L" ОТОБРАЖЕНИЕ ВСЕХ РЕЙСОВ");
+	NewLine();
+	SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 	wprintf(L"%s", TABLE_HEADER);
 	SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 	NewLine();
 	int j = 1;
-	if (chosenNode != first)
+	if (chosenNode != first && !seekMode)
 		SetConsoleColor(15, 0);
 	else
 		SetConsoleColor(8, 0);
-	wprintf(L"\x2191");
+	if (chosenNode)
+			wprintf(L"\x2191");
 	SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 	NewLine();
 	if (HasAdditionalElms(chosenNode))
-	{
 		lastChosenNode = chosenNode;
 
-	}
-
 	if (lastChosenNode == -1)
-		lastChosenNode = first;
+	{
+		if (chosenNode != first)
+			lastChosenNode = chosenNode;
+		else
+			lastChosenNode = first;
+	}
 
 	for (const struct Node* i = lastChosenNode; i != 0; i = i->next)
 	{
@@ -140,13 +146,16 @@ void DrawRecordsFrame(struct Node* chosenNode)
 		wprintf(L" %6d %19s %17s %12.2f %10d ", i->flight.flightNumber, i->flight.flightTitle,
 			i->flight.planeModel, i->flight.expenses, i->flight.passengerCount);
 		SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
-		if (j <= 10 && i == last) {
+		
+		if (j <= 10 && i == last || seekMode) {
 			NewLine();
 			SetConsoleColor(8, 0);
 			wprintf(L"\x2193");
 		}
 		NewLine();
 		j++;
+		if (seekMode)
+			break;
 	}
 	NewLine();
 	SetConsoleColor(0, 15);
@@ -286,7 +295,6 @@ void DrawFlightAlterationFrame(const struct Flight* newFlight, const struct Flig
 	SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 	wprintf(L"  Перевозка одного пассажира %11.2f РУБ", (originalFlight->passengerCount > 0) ? originalFlight->expenses / originalFlight->passengerCount : 0);
 	NewLine();
-
 	WipeRows();
 }
 
@@ -320,7 +328,7 @@ static void Run(const enum Option chosenOption)
 		{
 			NewLine();
 			SetConsoleColor(RED_COLOR, BLACK_COLOR);
-			wprintf(L" [ОШИБКА] Невозможно открыть файл");
+			wprintf(L" [ОШИБКА] Произошла ошибка при попытке прочитать файл");
 			NewLine();
 			SetConsoleColor(BLUE_COLOR, BLACK_COLOR);
 			wprintf(L" [ИНФОРМАЦИЯ] Нажмите любую клавишу чтобы продолжить");
@@ -343,7 +351,8 @@ static void Run(const enum Option chosenOption)
 		break;
 	case DISPLAY_OPTION:
 		HideCursor(TRUE);
-		DisplayRecords(first);
+		DisplayRecords(first, FALSE);
+		lastChosenNode = -1;
 		break;
 	case APPEND_OPTION:
 		while (TRUE)
@@ -415,7 +424,7 @@ static void Run(const enum Option chosenOption)
 		HideCursor(TRUE);
 		nodeAddress = FindFlightByNum(inputInt);
 		if (nodeAddress != EOF)
-			DisplayRecords(nodeAddress);
+			DisplayRecords(nodeAddress, TRUE);
 		else
 		{
 			NewLine();
@@ -428,6 +437,8 @@ static void Run(const enum Option chosenOption)
 			NewLine();
 			_getch();
 		}
+		lastChosenNode = -1;
+
 		break;
 	case SAVE_FILE_OPTION:
 		NewLine();

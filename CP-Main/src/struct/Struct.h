@@ -1,8 +1,8 @@
 ﻿#pragma once
 #define TABLE_HEADER L"  № РЕЙСА      НАЗВАНИЕ РЕЙСА\tМОДЕЛЬ САМОЛЁТА\t   РАССТРАТЫ  ПАССАЖИРЫ"
 
-#define TITLE_CAPACITY 21
-#define PLANE_MODEL_CAPACITY 21
+#define TITLE_CAPACITY 19
+#define PLANE_MODEL_CAPACITY 19
 struct Flight
 {
 	int flightNumber, passengerCount;
@@ -18,7 +18,7 @@ struct Node
 
 void AddFlight(const struct Flight* flight);
 void EraseFlight(const int flightNumber);
-void DisplayRecords(struct Node* chosenRecord);
+void DisplayRecords(struct Node* chosenRecord, int seekMode);
 struct Flight MakeFlight();
 struct Node* FindFlightByNum(int flightNumber);
 int GetIndex(const struct Node* node);

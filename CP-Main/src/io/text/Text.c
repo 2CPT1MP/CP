@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "Struct.h"
 #include "Menu.h"
+#include "Binary.h"
 
 int SaveAsText(const wchar_t* filename)
 {
@@ -19,7 +20,7 @@ int SaveAsText(const wchar_t* filename)
 
 	for (struct Node* i = first; i != NULL; i = i->next)
 	{
-		fwprintf_s(fStream, L"\"%d\"\t\"%s\"\t\"%s\"\t\"%.2f\"\t\"%d\"\n", i->flight.flightNumber, i->flight.flightTitle,
+		fwprintf_s(fStream, L"\"%d\"\t\t\"%s\"\t\t\"%s\"\t\t\"%.2f\"\t\t\"%d\"\n", i->flight.flightNumber, i->flight.flightTitle,
 			i->flight.planeModel, i->flight.expenses, 
 			i->flight.passengerCount);
 	}
@@ -32,6 +33,7 @@ int ReadText(const wchar_t* filename)
 	FILE* fStream = _wfopen(filename, L"rt, ccs=UNICODE");
 	if (!fStream)
 		return -1;
+	SaveData(first);
 	DelAll();
 
 	_setmode(_fileno(fStream), _O_U16TEXT);
@@ -47,10 +49,16 @@ int ReadText(const wchar_t* filename)
 		{
 			wchar_t charArray[TITLE_CAPACITY] = { 0 };
 			inputChar = getwc(fStream);
-			for (int i = 0; i < TITLE_CAPACITY, inputChar != '\"'; i++)
+			for (int i = 0; inputChar != '\"'; i++)
 			{
-				charArray[i] = inputChar;
+				if (i < TITLE_CAPACITY)
+					charArray[i] = inputChar;
 				inputChar = getwc(fStream);
+				if (feof(fStream))
+				{
+					ReadData();
+					return -1;
+				}
 			}
 			inputChar = getwc(fStream);
 			int intIn;

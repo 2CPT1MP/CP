@@ -383,7 +383,7 @@ static void AlterFlight(struct Node* node)
 				SetConsoleColor(WHITE_COLOR, BLACK_COLOR);
 				HideCursor(FALSE);
 				wscanf_s(L"%d", &testValue);
-				fseek(stdout, 0, SEEK_END);
+				fseek(stdin, 0, SEEK_END);
 				HideCursor(TRUE);
 				if (testValue == node->flight.flightNumber)
 				{
@@ -418,27 +418,27 @@ static void AlterFlight(struct Node* node)
 }
 
 
-void DisplayRecords(struct Node* chosenNode)
+void DisplayRecords(struct Node* chosenNode, int seekMode)
 {
 	while (TRUE)
 	{
 		HideCursor(TRUE);
-		DrawRecordsFrame(chosenNode);
+		DrawRecordsFrame(chosenNode, seekMode);
 
 		switch (_getch())
 		{
 		case DOWN_ARROW_KEY:
-			if (chosenNode && chosenNode->next)
+			if (chosenNode && chosenNode->next && !seekMode)
 				chosenNode = chosenNode->next;
 			break;
 		case UP_ARROW_KEY:
-			if (chosenNode && chosenNode->previous)
+			if (chosenNode && chosenNode->previous && !seekMode)
 				chosenNode = chosenNode->previous;
 			break;
 		case ENTER_KEY:
 			AlterFlight(chosenNode);
 			chosenNode = first;
-			break;
+			return;
 		case ESC_KEY:
 			return;
 		}

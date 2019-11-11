@@ -55,5 +55,5 @@ void DrawEditMenuFrame(enum EditMenuOption chosenOption, const struct Flight* fl
 void SetConsoleColor(int textColor, int bgColor);
 void HideCursor(int state);
 void NewLine();
-void DrawRecordsFrame(struct Node* chosenNode);
+void DrawRecordsFrame(struct Node* chosenNode, int seekMode);
 COORD GetConsoleCursorPosition();
